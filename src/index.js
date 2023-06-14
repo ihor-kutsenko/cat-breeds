@@ -1,12 +1,13 @@
 import { fetchBreeds, fetchCatByBreed } from './cat-api';
+import { breedSelectRef, catInfoRef, loaderRef, errorRef } from './helpers/refs';
+import errorNotiflix from './helpers/errorNotiflix';
+import hideCatInfo from './helpers/hideCatInfo';
+import showError from './helpers/showError';
 
 import Notiflix from 'notiflix';
 import axios from "axios";
 
-const breedSelectRef = document.querySelector('.breed-select');
-const catInfoRef = document.querySelector('.cat-info');
-const loaderRef = document.querySelector('.loader');
-const errorRef = document.querySelector('.error');
+
 
 loaderRef.classList.add('hidden');
 catInfoRef.classList.add('hidden');
@@ -47,38 +48,36 @@ function renderBreedsSelect(breeds) {
   breedSelectRef.addEventListener('change', showCatByBreed);
 }
 
+
 showBreeds();
-hideCatInfo()
+hideCatInfo();
 
 
 
 async function showCatByBreed(event) {
   hideCatInfo();
+
   try {
-const selectedBreedId = event.target.value;
+    const selectedBreedId = event.target.value;
     const cat = await fetchCatByBreed(selectedBreedId);
+
     if (cat) {
         renderCatInfo(cat);
-      catInfoRef.classList.remove('hidden');
-      loaderRef.classList.add('hidden');
+        catInfoRef.classList.remove('hidden');
+        loaderRef.classList.add('hidden');
       
       } else {
         
         errorRef.classList.remove('hidden');
       }
       
-    
-
-    
-    
-
-    if (cat.length === 0) {
+            
+   if (cat.length === 0) {
       errorRef.classList.remove('hidden');
-      
-    }
+      }
     
   } catch (error) {
-    loaderRef.classList.add('hidden');
+      loaderRef.classList.add('hidden');
       errorNotiflix();
   }
   
@@ -109,27 +108,9 @@ function renderCatInfo(cat) {
 
 
 
-function hideCatInfo() {
-  if (!catInfoRef.classList.contains('hidden')) {
-    catInfoRef.classList.add('hidden');
-  }
-  loaderRef.classList.remove('hidden');
-  errorRef.classList.add('hidden'); 
-}
 
 
 
-function showError(message) {
-  errorRef.textContent = message;
-  errorRef.classList.remove('hidden');
-}
 
-function errorNotiflix() {
-  Notiflix.Notify.failure(
-    `Oops! Something went wrong! Try reloading the page!`,
-    {
-      clickToClose: true,
-      timeout: 4000,
-    }
-  );
-}
+
+
